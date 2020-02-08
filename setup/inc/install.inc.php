@@ -1,6 +1,43 @@
 <?php
 if(!defined('SETUPINC')) die('Kwaheri!');
 $info=($_POST && $errors)?Format::htmlchars($_POST):array('prefix'=>'ost_','dbhost'=>'localhost','lang_id'=>'en_US');
+
+$msgarray = array();
+$$connectstr_dbhost = '';
+$connectstr_dbname = '';
+$connectstr_dbusername = '';
+$connectstr_dbpassword = '';
+
+foreach ($_SERVER as $key => $value) {
+    if (strpos($key, "MYSQLCONNSTR_localdb") !== 0) {
+        continue;
+    }
+
+    $connectstr_dbhost = preg_replace("/^.*Data Source=(.+?);.*$/", "\\1", $value);
+    $connectstr_dbname = preg_replace("/^.*Database=(.+?);.*$/", "\\1", $value);
+    $connectstr_dbusername = preg_replace("/^.*User Id=(.+?);.*$/", "\\1", $value);
+    $connectstr_dbpassword = preg_replace("/^.*Password=(.+?)$/", "\\1", $value);
+}
+$_POST['dbhost'] = $connectstr_dbhost;
+$_POST['dbuser'] = $connectstr_dbusername;
+$_POST['dbpass'] = $connectstr_dbpassword;
+$_POST['dbname'] = $connectstr_dbname;
+
+$appname = getenv("osTicketAppName");
+$_POST['name'] = $appname;
+$email =  getenv("osticketSendGridUsername"); 
+$_POST['email'] = $email;
+$fname =  getenv("osticketFname"); 
+$_POST['fname'] = $fname;
+$lname =  getenv("osticketLname"); 
+$_POST['lname'] = $lname;
+$admin_email =  getenv("osticketEmail"); 
+$_POST['admin_email'] = $admin_email;
+$username =  getenv("osticketUsername"); 
+$_POST['username'] = $username;
+$passwd =  getenv("osticketPWD"); 
+$_POST['passwd'] = $passwd;
+$_POST['passwd2'] = $passwd;
 ?>
 <div id="main" class="step2">
     <h1><?php echo __('osTicket Basic Installation'); ?></h1>
@@ -120,7 +157,7 @@ $info=($_POST && $errors)?Format::htmlchars($_POST):array('prefix'=>'ost_','dbho
             </form>
     </div>
     <div>
-        <p><strong><?php echo __('Need Help?');?></strong> <?php echo __('We provide <u>professional installation services</u> and commercial support.');?> <a target="_blank" href="http://osticket.com/support"><?php echo __('Learn More!');?></a></p>
+        <p><strong><?php echo __('Need Help?');?></strong> <?php echo __('We provide <u>professional installation services</u> and commercial support.');?> <a target="_blank" href="https://osticket.com/support"><?php echo __('Learn More!');?></a></p>
     </div>
     <div id="overlay"></div>
     <div id="loading">
